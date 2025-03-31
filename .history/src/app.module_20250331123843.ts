@@ -16,9 +16,10 @@ import { User } from './entities/user.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-     AuthModule, 
-     CartModule,
+    AuthModule, 
+
+    CartModule,
+
      OrderModule, 
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -29,12 +30,7 @@ import { User } from './entities/user.entity';
       database: process.env.DB_NAME,
       entities: [Cart, CartItem, Order, Products, User],
       synchronize: true, // Set false in production
-      ssl: process.env.DB_NODE_ENV === 'production'
-        ? { rejectUnauthorized: false }
-        : false,
     }),
   ],
-  controllers: [AppController],
-  providers: [],
 })
 export class AppModule {}

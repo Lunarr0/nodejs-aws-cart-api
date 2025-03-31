@@ -16,7 +16,6 @@ import { User } from './entities/user.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
      AuthModule, 
      CartModule,
      OrderModule, 

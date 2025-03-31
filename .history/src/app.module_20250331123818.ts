@@ -7,7 +7,6 @@ import { AuthModule } from './auth/auth.module';
 import { OrderModule } from './order/order.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { Cart } from './entities/cart.entity';
 import { CartItem } from './entities/cart-item.entity';
 import { Order } from './entities/order.entity';
@@ -17,9 +16,6 @@ import { User } from './entities/user.entity';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-     AuthModule, 
-     CartModule,
-     OrderModule, 
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -29,12 +25,7 @@ import { User } from './entities/user.entity';
       database: process.env.DB_NAME,
       entities: [Cart, CartItem, Order, Products, User],
       synchronize: true, // Set false in production
-      ssl: process.env.DB_NODE_ENV === 'production'
-        ? { rejectUnauthorized: false }
-        : false,
     }),
   ],
-  controllers: [AppController],
-  providers: [],
 })
 export class AppModule {}
