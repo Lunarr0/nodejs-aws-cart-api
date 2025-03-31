@@ -1,0 +1,811 @@
+Resources:
+  Vpc8378EB38:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 172.16.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: InfraStack/Vpc
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/Resource
+  VpcPublicSubnetSubnet1SubnetC1C3749F:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      CidrBlock: 172.16.0.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: PublicSubnet
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: InfraStack/Vpc/PublicSubnetSubnet1
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PublicSubnetSubnet1/Subnet
+  VpcPublicSubnetSubnet1RouteTable54741E8C:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: InfraStack/Vpc/PublicSubnetSubnet1
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PublicSubnetSubnet1/RouteTable
+  VpcPublicSubnetSubnet1RouteTableAssociation12F076E3:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnetSubnet1RouteTable54741E8C
+      SubnetId:
+        Ref: VpcPublicSubnetSubnet1SubnetC1C3749F
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PublicSubnetSubnet1/RouteTableAssociation
+  VpcPublicSubnetSubnet1DefaultRoute8657BB78:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VpcIGWD7BA715C
+      RouteTableId:
+        Ref: VpcPublicSubnetSubnet1RouteTable54741E8C
+    DependsOn:
+      - VpcVPCGWBF912B6E
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PublicSubnetSubnet1/DefaultRoute
+  VpcPublicSubnetSubnet1EIP2A6702E7:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: InfraStack/Vpc/PublicSubnetSubnet1
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PublicSubnetSubnet1/EIP
+  VpcPublicSubnetSubnet1NATGateway74B4EB81:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - VpcPublicSubnetSubnet1EIP2A6702E7
+          - AllocationId
+      SubnetId:
+        Ref: VpcPublicSubnetSubnet1SubnetC1C3749F
+      Tags:
+        - Key: Name
+          Value: InfraStack/Vpc/PublicSubnetSubnet1
+    DependsOn:
+      - VpcPublicSubnetSubnet1DefaultRoute8657BB78
+      - VpcPublicSubnetSubnet1RouteTableAssociation12F076E3
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PublicSubnetSubnet1/NATGateway
+  VpcPublicSubnetSubnet2Subnet2294BBD1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      CidrBlock: 172.16.1.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: PublicSubnet
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: InfraStack/Vpc/PublicSubnetSubnet2
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PublicSubnetSubnet2/Subnet
+  VpcPublicSubnetSubnet2RouteTableC47A3F8E:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: InfraStack/Vpc/PublicSubnetSubnet2
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PublicSubnetSubnet2/RouteTable
+  VpcPublicSubnetSubnet2RouteTableAssociation4749FF4D:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPublicSubnetSubnet2RouteTableC47A3F8E
+      SubnetId:
+        Ref: VpcPublicSubnetSubnet2Subnet2294BBD1
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PublicSubnetSubnet2/RouteTableAssociation
+  VpcPublicSubnetSubnet2DefaultRoute27ACE0CE:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VpcIGWD7BA715C
+      RouteTableId:
+        Ref: VpcPublicSubnetSubnet2RouteTableC47A3F8E
+    DependsOn:
+      - VpcVPCGWBF912B6E
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PublicSubnetSubnet2/DefaultRoute
+  VpcPrivateSubnetSubnet1SubnetBF616886:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      CidrBlock: 172.16.2.0/24
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: PrivateSubnet
+        - Key: aws-cdk:subnet-type
+          Value: Private
+        - Key: Name
+          Value: InfraStack/Vpc/PrivateSubnetSubnet1
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PrivateSubnetSubnet1/Subnet
+  VpcPrivateSubnetSubnet1RouteTable955CF273:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: InfraStack/Vpc/PrivateSubnetSubnet1
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PrivateSubnetSubnet1/RouteTable
+  VpcPrivateSubnetSubnet1RouteTableAssociation8FCC9B9E:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnetSubnet1RouteTable955CF273
+      SubnetId:
+        Ref: VpcPrivateSubnetSubnet1SubnetBF616886
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PrivateSubnetSubnet1/RouteTableAssociation
+  VpcPrivateSubnetSubnet1DefaultRouteE7080013:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: VpcPublicSubnetSubnet1NATGateway74B4EB81
+      RouteTableId:
+        Ref: VpcPrivateSubnetSubnet1RouteTable955CF273
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PrivateSubnetSubnet1/DefaultRoute
+  VpcPrivateSubnetSubnet2SubnetB81B84EB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      CidrBlock: 172.16.3.0/24
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: PrivateSubnet
+        - Key: aws-cdk:subnet-type
+          Value: Private
+        - Key: Name
+          Value: InfraStack/Vpc/PrivateSubnetSubnet2
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PrivateSubnetSubnet2/Subnet
+  VpcPrivateSubnetSubnet2RouteTable97FE118C:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: InfraStack/Vpc/PrivateSubnetSubnet2
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PrivateSubnetSubnet2/RouteTable
+  VpcPrivateSubnetSubnet2RouteTableAssociation71F1F8BF:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VpcPrivateSubnetSubnet2RouteTable97FE118C
+      SubnetId:
+        Ref: VpcPrivateSubnetSubnet2SubnetB81B84EB
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PrivateSubnetSubnet2/RouteTableAssociation
+  VpcPrivateSubnetSubnet2DefaultRoute55405E5B:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: VpcPublicSubnetSubnet1NATGateway74B4EB81
+      RouteTableId:
+        Ref: VpcPrivateSubnetSubnet2RouteTable97FE118C
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/PrivateSubnetSubnet2/DefaultRoute
+  VpcIGWD7BA715C:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: InfraStack/Vpc
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/IGW
+  VpcVPCGWBF912B6E:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId:
+        Ref: VpcIGWD7BA715C
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/VPCGW
+  VpcRestrictDefaultSecurityGroupCustomResourceC73DA2BE:
+    Type: Custom::VpcRestrictDefaultSG
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E
+          - Arn
+      DefaultSecurityGroupId:
+        Fn::GetAtt:
+          - Vpc8378EB38
+          - DefaultSecurityGroup
+      Account:
+        Ref: AWS::AccountId
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: InfraStack/Vpc/RestrictDefaultSecurityGroupCustomResource/Default
+  CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+      ManagedPolicyArns:
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: Inline
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:AuthorizeSecurityGroupIngress
+                  - ec2:AuthorizeSecurityGroupEgress
+                  - ec2:RevokeSecurityGroupIngress
+                  - ec2:RevokeSecurityGroupEgress
+                Resource:
+                  - Fn::Join:
+                      - ""
+                      - - "arn:"
+                        - Ref: AWS::Partition
+                        - ":ec2:"
+                        - Ref: AWS::Region
+                        - ":"
+                        - Ref: AWS::AccountId
+                        - :security-group/
+                        - Fn::GetAtt:
+                            - Vpc8378EB38
+                            - DefaultSecurityGroup
+    Metadata:
+      aws:cdk:path: InfraStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role
+  CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip
+      Timeout: 900
+      MemorySize: 128
+      Handler: __entrypoint__.handler
+      Role:
+        Fn::GetAtt:
+          - CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0
+          - Arn
+      Runtime: nodejs20.x
+      Description: Lambda function for removing all inbound/outbound rules from the VPC default security group
+    DependsOn:
+      - CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0
+    Metadata:
+      aws:cdk:path: InfraStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler
+      aws:asset:path: asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200
+      aws:asset:property: Code
+  DBCredentialsSecretAFB45EA2:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: DBCredentials
+      SecretString: '{"username":"tpostgre","password":"secure_password_"}'
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: InfraStack/DBCredentialsSecret/Resource
+  LambdaRole3A44B857:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - ec2:AssignPrivateIpAddresses
+                  - ec2:CreateNetworkInterface
+                  - ec2:DeleteNetworkInterface
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:UnassignPrivateIpAddresses
+                Effect: Allow
+                Resource: "*"
+            Version: "2012-10-17"
+          PolicyName: vpc-policy
+    Metadata:
+      aws:cdk:path: InfraStack/LambdaRole/Resource
+  LambdaRoleDefaultPolicy75625A82:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - secretsmanager:DescribeSecret
+              - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+              Ref: DBCredentialsSecretAFB45EA2
+        Version: "2012-10-17"
+      PolicyName: LambdaRoleDefaultPolicy75625A82
+      Roles:
+        - Ref: LambdaRole3A44B857
+    Metadata:
+      aws:cdk:path: InfraStack/LambdaRole/DefaultPolicy/Resource
+  LambdaSecurityGroup0BD9FC99:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Lambda function
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow inbound traffic from all sources
+          IpProtocol: "-1"
+      VpcId:
+        Ref: Vpc8378EB38
+    Metadata:
+      aws:cdk:path: InfraStack/LambdaSecurityGroup/Resource
+  NestJsLambdaBE6EFF09:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 2fddabb57f1fbd3e444707aa251f2bbb9dd7b4dfbf75f96286ce665d1b2a699c.zip
+      Environment:
+        Variables:
+          NODE_ENV: production
+          DB_HOST: ""
+          DB_PORT: "5432"
+          DB_USER: ""
+          DB_NAME: ""
+          SECRETS_ARN:
+            Ref: DBCredentialsSecretAFB45EA2
+      Handler: lambda.handler
+      MemorySize: 1024
+      Role:
+        Fn::GetAtt:
+          - LambdaRole3A44B857
+          - Arn
+      Runtime: nodejs20.x
+      Timeout: 30
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::GetAtt:
+              - LambdaSecurityGroup0BD9FC99
+              - GroupId
+        SubnetIds:
+          - Ref: VpcPrivateSubnetSubnet1SubnetBF616886
+          - Ref: VpcPrivateSubnetSubnet2SubnetB81B84EB
+    DependsOn:
+      - LambdaRoleDefaultPolicy75625A82
+      - LambdaRole3A44B857
+      - VpcPrivateSubnetSubnet1DefaultRouteE7080013
+      - VpcPrivateSubnetSubnet1RouteTableAssociation8FCC9B9E
+      - VpcPrivateSubnetSubnet2DefaultRoute55405E5B
+      - VpcPrivateSubnetSubnet2RouteTableAssociation71F1F8BF
+    Metadata:
+      aws:cdk:path: InfraStack/NestJsLambda/Resource
+      aws:asset:path: asset.2fddabb57f1fbd3e444707aa251f2bbb9dd7b4dfbf75f96286ce665d1b2a699c
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  CartApi5565E8DE:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Description: This is the Cart API
+      Name: Cart Service
+    Metadata:
+      aws:cdk:path: InfraStack/CartApi/Resource
+  CartApiDeploymentCFC182CA6f38dec89854d5da65124b1174e39455:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      Description: This is the Cart API
+      RestApiId:
+        Ref: CartApi5565E8DE
+    DependsOn:
+      - CartApiproxyANY7EE76E68
+      - CartApiproxyOPTIONS173999F0
+      - CartApiproxy61A35E30
+      - CartApiANYD76896CD
+      - CartApiOPTIONS429EF097
+    Metadata:
+      aws:cdk:path: InfraStack/CartApi/Deployment/Resource
+  CartApiDeploymentStageprod9CE99744:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId:
+        Ref: CartApiDeploymentCFC182CA6f38dec89854d5da65124b1174e39455
+      MethodSettings:
+        - DataTraceEnabled: true
+          HttpMethod: "*"
+          LoggingLevel: INFO
+          MetricsEnabled: true
+          ResourcePath: /*
+      RestApiId:
+        Ref: CartApi5565E8DE
+      StageName: prod
+    Metadata:
+      aws:cdk:path: InfraStack/CartApi/DeploymentStage.prod/Resource
+  CartApiOPTIONS429EF097:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+              method.response.header.Access-Control-Max-Age: "'86400'"
+            StatusCode: "204"
+        RequestTemplates:
+          application/json: "{ statusCode: 200 }"
+        Type: MOCK
+      MethodResponses:
+        - ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Max-Age: true
+          StatusCode: "204"
+      ResourceId:
+        Fn::GetAtt:
+          - CartApi5565E8DE
+          - RootResourceId
+      RestApiId:
+        Ref: CartApi5565E8DE
+    Metadata:
+      aws:cdk:path: InfraStack/CartApi/Default/OPTIONS/Resource
+  CartApiproxy61A35E30:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - CartApi5565E8DE
+          - RootResourceId
+      PathPart: "{proxy+}"
+      RestApiId:
+        Ref: CartApi5565E8DE
+    Metadata:
+      aws:cdk:path: InfraStack/CartApi/Default/{proxy+}/Resource
+  CartApiproxyOPTIONS173999F0:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+              method.response.header.Access-Control-Max-Age: "'86400'"
+            StatusCode: "204"
+        RequestTemplates:
+          application/json: "{ statusCode: 200 }"
+        Type: MOCK
+      MethodResponses:
+        - ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Max-Age: true
+          StatusCode: "204"
+      ResourceId:
+        Ref: CartApiproxy61A35E30
+      RestApiId:
+        Ref: CartApi5565E8DE
+    Metadata:
+      aws:cdk:path: InfraStack/CartApi/Default/{proxy+}/OPTIONS/Resource
+  CartApiproxyANYApiPermissionInfraStackCartApiB0CBDFA3ANYproxyC35237A2:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - NestJsLambdaBE6EFF09
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CartApi5565E8DE
+            - /
+            - Ref: CartApiDeploymentStageprod9CE99744
+            - /*/*
+    Metadata:
+      aws:cdk:path: InfraStack/CartApi/Default/{proxy+}/ANY/ApiPermission.InfraStackCartApiB0CBDFA3.ANY..{proxy+}
+  CartApiproxyANYApiPermissionTestInfraStackCartApiB0CBDFA3ANYproxyD9CC6CED:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - NestJsLambdaBE6EFF09
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CartApi5565E8DE
+            - /test-invoke-stage/*/*
+    Metadata:
+      aws:cdk:path: InfraStack/CartApi/Default/{proxy+}/ANY/ApiPermission.Test.InfraStackCartApiB0CBDFA3.ANY..{proxy+}
+  CartApiproxyANY7EE76E68:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: ANY
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - NestJsLambdaBE6EFF09
+                  - Arn
+              - /invocations
+      ResourceId:
+        Ref: CartApiproxy61A35E30
+      RestApiId:
+        Ref: CartApi5565E8DE
+    Metadata:
+      aws:cdk:path: InfraStack/CartApi/Default/{proxy+}/ANY/Resource
+  CartApiANYD76896CD:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: ANY
+      Integration:
+        Type: MOCK
+      ResourceId:
+        Fn::GetAtt:
+          - CartApi5565E8DE
+          - RootResourceId
+      RestApiId:
+        Ref: CartApi5565E8DE
+    Metadata:
+      aws:cdk:path: InfraStack/CartApi/Default/ANY/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/+1WbW8bNwz+LdXHQrmlKdYN/uZ4aWcsiQ07yIcZRkFLzFmNTrrqxalzuP9eSLo3JxnQod3gAft0OlKkyIfkI51lb379OTt9BQ/2hPH7Eyk2WbV0wO4pPNiPFbKzrLot2aoiohxzbtBatGREXhNKCvgyfmx/FLgP4PAB9q3E+o1CN9HqTuTegBNakdGqIkxwcwX2vjMs8MDiZl8GwdxvpGCkpt9uYcQOHJJ6Xa/p5E7dzic0eVnGbauKwA6EhI2Qwu3/1Kp1syvZlDfrcNi51Oy+y7JMTqblTF2CV2xLRs54pESUu3eTJ9vBWpGrabl718A1UxODTfbkdcznKKKIgXB+3dWNjFbkNVkfTYDHEUVqpdRAYbXQ3uENbCT28l42tlYzER10m8PiYjoPnx5s2jTrD+/MO5D2CDD/vjCOJ5IjCSN14VQ5NAq7Hkoc1/yNnQO2LVA5ukTmjXD7D0b7clWFYJujOFpmRNm5pgSk1A9jKWfebbRXPI1LQw5TlYd4Fl5iom5QUyWFwiRJg8W0UsiCy5b5vRKfPTb4xHJGYkmTNIytphaZQWcLUJCjyapl/F9VJCmuB1QfBUtnhMpvQfok75wadDUVUGTVQksMA2WtL5Cf78moIqURiokS5Jgx7ZXrkfcFBoMxG8BNUjh8rqVgItx3q+pAth+bvkNeVqwpERGq3knbUZzf6HkbUDILJ9SJemMZp73pAS//pXKd6EYiTfIg7QxudNA88/NczPnSgcPQRLYJKTpOPmsqodhwyKr3XkW8VhUxXjnRFWkLiks07WBo3irCHu1dPz39KlGgDWV6+TqPte+bxjYRU4JqJ4xWIdx29LDQZr8Uj+25JmbYI38xNIkgDZI/ImWEvYU5lgBNIawVWtXUvv0I1qKz2Th8qH2bnXt2j+4cLK7WFEqRJ1LIqgVaNy5FqFRaDUbqORtwvAMv3UQbOzd4J0W+dbOyme0qkcXMiFx0sx5FV+i2mh+IfkfgaIZPxbwtBOFYSr0f+LUOchwEJnWeC5Vf4g4lGZHp9ftZCA4c3BhgeKHCXctbAirQGcHsgbRuJiLlTH+LJwaQV9VLJFiKtl/QgVD99idje6lzwUAGausG9p+UxyT6aOgyABVTaEUtO/54BBOzBr90gVZ7wzD2V5y9VPHUVVHVEoBzZdI1AqEc5gYGYOtBP3m31UY8BsYY/nVXayuK9g0vxBaCUvyB+wV+9sKEiJvr9eX9McGt5gu0pVa2IXTrwHk76TnKNOo5GCjQtd1br+umPlcHXv6uE/o/WP8WWM3IfqeHOADJgM6N/rJvx2BVkRJMP3wNa06fuWsUycfsSXQdRg3vp1fvf6TIsULfBgKofZvn4Gk5TH3dkXWEt647wklkM/HW6eKJrN//RD83eic4mkBWNF6QgcSEyoPNzLvSu5oqzTH7ZH/anZ1mb37JTl99skKcNI+ZbJG+XwG0j2tGHhEAAA==
+    Metadata:
+      aws:cdk:path: InfraStack/CDKMetadata/Default
+    Condition: CDKMetadataAvailable
+Outputs:
+  CartApiEndpoint55A3DDB8:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: CartApi5565E8DE
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: CartApiDeploymentStageprod9CE99744
+          - /
+  ApiUrl:
+    Description: API Gateway URL
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: CartApi5565E8DE
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: CartApiDeploymentStageprod9CE99744
+          - /
+    Export:
+      Name: CartApiUrl
+  LambdaArn:
+    Description: Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+        - NestJsLambdaBE6EFF09
+        - Arn
+    Export:
+      Name: CartLambdaArn
+  SecretArn:
+    Description: Database Credentials Secret ARN
+    Value:
+      Ref: DBCredentialsSecretAFB45EA2
+    Export:
+      Name: DBCredentialsSecretArn
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - af-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-3
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-4
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-2
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - il-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+      - Fn::Equals:
+          - Ref: AWS::Region
+          - us-west-2
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+
