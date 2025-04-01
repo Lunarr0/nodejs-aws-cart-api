@@ -46,18 +46,18 @@ export class InfraStack extends cdk.Stack {
     });
 
     // Add resource policy to the secret
-    dbCredentialsSecret.addToResourcePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        principals: [
-          new iam.ServicePrincipal('lambda.amazonaws.com')
-        ],
-        actions: [
-          'secretsmanager:GetSecretValue'
-        ],
-        resources: ['*']  // This will be automatically scoped to this secret
-      })
-    );
+dbCredentialsSecret.addToResourcePolicy(
+  new iam.PolicyStatement({
+    effect: iam.Effect.ALLOW,
+    principals: [
+      new iam.ServicePrincipal('lambda.amazonaws.com')
+    ],
+    actions: [
+      'secretsmanager:GetSecretValue'
+    ],
+    resources: ['*']  // This will be automatically scoped to this secret
+  })
+);
 
     // Lambda Role
     const lambdaRole = new iam.Role(this, 'LambdaRole', {

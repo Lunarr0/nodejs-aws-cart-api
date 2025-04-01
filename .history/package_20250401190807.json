@@ -9,7 +9,7 @@
     "prebuild": "rimraf dist",
     "build": "npm run build:lambda ",
     "build:lambda": "tsc -p tsconfig.build.json && npm run copy-prod-files",
-    "copy-prod-files": "node scripts/copy-prod-files.js",
+     "copy-prod-files": "node scripts/copy-prod-files.js",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
