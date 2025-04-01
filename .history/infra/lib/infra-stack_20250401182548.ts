@@ -42,22 +42,7 @@ export class InfraStack extends cdk.Stack {
         username: process.env.DB_USER || "tpostgre",
         password: process.env.DB_PASS || "secure_password",
       })),
-      
     });
-
-    // Add resource policy to the secret
-    dbCredentialsSecret.addToResourcePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        principals: [
-          new iam.ServicePrincipal('lambda.amazonaws.com')
-        ],
-        actions: [
-          'secretsmanager:GetSecretValue'
-        ],
-        resources: ['*']  // This will be automatically scoped to this secret
-      })
-    );
 
     // Lambda Role
     const lambdaRole = new iam.Role(this, 'LambdaRole', {
@@ -139,7 +124,7 @@ export class InfraStack extends cdk.Stack {
     // Lambda Function Configuration
     const nestLambda = new lambda.Function(this, 'NestJsLambda', {
       runtime: lambda.Runtime.NODEJS_20_X,
-      handler: 'lambda.handler',
+      handler: 'src/lambda.handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../../dist'), {
         exclude: [
           '.git',
@@ -162,13 +147,26 @@ export class InfraStack extends cdk.Stack {
           'node_modules/@types',
           'node_modules/typescript',
 
-          'coverage',
+          'coverage'
 
           'yarn-debug.log',
           'yarn-error.log',
           '.npm',
           '.yarn'
         ],
+        bundling: {
+          command: [
+
+            'bash', '-c',
+
+            'npm ci --production && cp -r . /asset-output/ && cd /asset-output && rm -rf $(npm pack | tail -1) && npm prune --production'
+
+          ],
+
+          image: lambda.Runtime.NODEJS_20_X.bundlingImage,
+
+          user: 'root'
+        }
       }),
       vpc,
       vpcSubnets: {
@@ -190,7 +188,7 @@ export class InfraStack extends cdk.Stack {
     });
 
     // Grant Lambda access to read secrets
-    dbCredentialsSecret.grantRead(lambdaRole);
+    dbCredentialsSecret.grantRead(nestLambda);
 
     // API Gateway
     const api = new apigateway.RestApi(this, 'CartApi', {

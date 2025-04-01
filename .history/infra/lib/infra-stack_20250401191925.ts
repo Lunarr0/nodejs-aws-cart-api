@@ -42,22 +42,7 @@ export class InfraStack extends cdk.Stack {
         username: process.env.DB_USER || "tpostgre",
         password: process.env.DB_PASS || "secure_password",
       })),
-      
     });
-
-    // Add resource policy to the secret
-    dbCredentialsSecret.addToResourcePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        principals: [
-          new iam.ServicePrincipal('lambda.amazonaws.com')
-        ],
-        actions: [
-          'secretsmanager:GetSecretValue'
-        ],
-        resources: ['*']  // This will be automatically scoped to this secret
-      })
-    );
 
     // Lambda Role
     const lambdaRole = new iam.Role(this, 'LambdaRole', {
@@ -190,7 +175,7 @@ export class InfraStack extends cdk.Stack {
     });
 
     // Grant Lambda access to read secrets
-    dbCredentialsSecret.grantRead(lambdaRole);
+    dbCredentialsSecret.grantRead(lambdarol);
 
     // API Gateway
     const api = new apigateway.RestApi(this, 'CartApi', {
