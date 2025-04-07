@@ -1,14 +1,25 @@
-export enum OrderStatus {
-  Open = 'OPEN',
-  Approved = 'APPROVED',
-  Confirmed = 'CONFIRMED',
-  Sent = 'SENT',
-  Completed = 'COMPLETED',
-  Cancelled = 'CANCELLED',
+export enum OrderStatuses {
+   OPEN = 'OPEN',
+   ORDERED = 'ORDERED',
+   PAID = 'PAID',
+   PROCESSING = 'PROCESSING',
+   SHIPPED = 'SHIPPED',
+   DELIVERED = 'DELIVERED',
+   CANCELLED = 'CANCELLED'
 }
 
-type StatusHistory = Array<{
-  status: OrderStatus;
+
+// export enum OrderStatus {
+//     ORDERED = 'ORDERED',
+//     PAID = 'PAID',
+//     PROCESSING = 'PROCESSING',
+//     SHIPPED = 'SHIPPED',
+//     DELIVERED = 'DELIVERED',
+//     CANCELLED = 'CANCELLED'
+// }
+
+export type StatusHistory = Array<{
+  status: OrderStatuses;
   timestamp: number;
   comment: string;
 }>;

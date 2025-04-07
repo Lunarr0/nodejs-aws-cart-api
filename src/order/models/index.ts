@@ -1,4 +1,4 @@
-import { Address, OrderStatus } from '../type';
+import { Address, OrderStatuses } from '../type';
 
 export type Order = {
   id?: string;
@@ -7,7 +7,7 @@ export type Order = {
   cartId: string;
   address: Address;
   statusHistory: Array<{
-    status: OrderStatus.Open;
+    status: OrderStatuses.OPEN;
     timestamp: number;
     comment: string;
   }>;
